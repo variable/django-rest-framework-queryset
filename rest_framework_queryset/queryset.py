@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import requests
+import copy
 
 
-class BaseAPIQuerySet(object):
+class APIQuerySet(object):
     def __init__(self, url, *args, **kwargs):
         self.url = url
         self.args = args
         self.kwargs = kwargs
 
-    def __call(self, *args, **kwargs):
-        return requests.get(url, *self.args, **kwargs)
+    def __call(self):
+        return requests.get(self.url, *self.args, **self.kwargs)
 
     def __call__(self):
         resp = self.__call()
@@ -28,7 +29,7 @@ class BaseAPIQuerySet(object):
 
     def __getitem__(self, index):
         if isinstance(index, int):
-            return super(BaseAPIQuerySet, self).__getitem__(index)
+            return super(APIQuerySet, self).__getitem__(index)
         elif isinstance(index, slice):
             with self:
                 params = self.kwargs.get('params', {})
