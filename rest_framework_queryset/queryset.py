@@ -59,7 +59,8 @@ class RestFrameworkQuerySet(BaseAPIQuerySet):
     def get_count(self):
         with self:
             params = self.kwargs.get('params', {})
-            params['page_size'] = 1
+            params['offset'] = 0
+            params['limit'] = 0
             self.kwargs['params'] = params
             resp = self.call_api()
             result = resp.json()
