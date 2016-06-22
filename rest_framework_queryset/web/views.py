@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView
-from queryset import APIQuerySet
+from queryset import RestFrameworkQuerySet
 
 
 class ListDataView(ListView):
@@ -8,4 +8,4 @@ class ListDataView(ListView):
     template_name = 'list.html'
 
     def get_queryset(self, *args, **kwargs):
-        return APIQuerySet('http://localhost:8082/api/')
+        return RestFrameworkQuerySet('http://localhost:8082/api/')
