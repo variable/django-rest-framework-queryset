@@ -3,6 +3,7 @@ Mimicking the Django ORM queryset so that can be used ListViews for pagination
 
 ## Usage:
 ```python
+from django.views.generic import ListView
 from rest_framework_queryset import RestFrameworkQuerySet
 
 class ListDataView(ListView):
