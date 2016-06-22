@@ -46,7 +46,7 @@ def extra_requirements():
 
 setup(
     name='django-rest-framework-queryset',
-    version=find_version('rest_framework_queryset', '__init__.py'),
+    version=find_version('__init__.py'),
     author='James Lin',
     author_email='james@lin.net.nz',
     long_description=read('README.md'),
@@ -59,7 +59,6 @@ setup(
         "Development Status :: 3 - Alpha",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
-        "Operating System :: OS Independent"
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.5",

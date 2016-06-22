@@ -42,6 +42,9 @@ class BaseAPIQuerySet(object):
         self.kwargs = self._old_kwargs
         self.args = self._old_args
 
+    def filter(self, **kargs):
+        raise NotImplementedError()
+
     def get_count(self):
         raise NotImplementedError()
 
@@ -73,3 +76,8 @@ class RestFrameworkQuerySet(BaseAPIQuerySet):
             params['limit'] = slicer.stop - slicer.start
             self.kwargs['params'] = params
             return self.__call__()
+
+    def filter(self, **kwargs):
+        params = self.kwargs.setdefault('params', {})
+        params.update(kwargs)
+        return self
