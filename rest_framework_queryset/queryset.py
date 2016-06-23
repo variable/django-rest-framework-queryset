@@ -18,37 +18,32 @@ class BaseAPIQuerySet(object):
         return self.request_method(self.url, *self.args, **self.kwargs)
 
     def __iter__(self):
-        return iter(self.__call__())
-
-    def __call__(self):
-        resp = self.call_api()
-        return self.get_result(resp)
+        return iter(self.get_result())
 
     def __len__(self):
-        return self.get_count()
+        return self.count()
 
     def __getitem__(self, index):
         if isinstance(index, int):
-            return self.__call__()[index]
+            return self.get_result()[index]
         elif isinstance(index, slice):
             return self.page_result(index)
 
-    def __enter__(self):
-        # temp swap out kwargs, assign by value and keep the original ref
-        self._old_kwargs = self.kwargs
-        self.kwargs = copy.deepcopy(self.kwargs)
-        self._old_args = self.args
-        self.args = copy.deepcopy(self.args)
+    def _clone(self):
+        kwargs = copy.deepcopy(self.kwargs)
+        args = copy.deepcopy(self.args)
+        url = copy.copy(self.url)
+        cloned = self.__class__(url, *args, **kwargs)
+        cloned.request_method = self.request_method
+        return cloned
 
-    def __exit__(self, type, value, traceback):
-        # put origin kwargs back
-        self.kwargs = self._old_kwargs
-        self.args = self._old_args
+    def count(self):
+        raise NotImplementedError()
 
     def filter(self, **kargs):
         raise NotImplementedError()
 
-    def get_count(self):
+    def all(self, **kargs):
         raise NotImplementedError()
 
     def get_result(self):
@@ -59,26 +54,32 @@ class BaseAPIQuerySet(object):
 
 
 class RestFrameworkQuerySet(BaseAPIQuerySet):
-    def get_count(self):
-        with self:
-            params = self.kwargs.get('params', {})
-            params['offset'] = 0
-            params['limit'] = 0
-            resp = self.call_api()
-            result = resp.json()
-            return result['count']
+    def count(self):
+        cloned = self._clone()
+        params = cloned.kwargs.get('params', {})
+        params['offset'] = 0
+        params['limit'] = 0
+        resp = cloned.call_api()
+        result = resp.json()
+        return result['count']
 
-    def get_result(self, response):
+    def get_result(self):
+        response = self.call_api()
         result = response.json()
         return result['results']
 
     def page_result(self, slicer):
-        params = self.kwargs.setdefault('params', {})
+        cloned = self._clone()
+        params = cloned.kwargs.setdefault('params', {})
         params['offset'] = slicer.start
         params['limit'] = slicer.stop - slicer.start
-        return self
+        return cloned.get_result()
 
     def filter(self, **kwargs):
-        params = self.kwargs.setdefault('params', {})
+        cloned = self._clone()
+        params = cloned.kwargs.setdefault('params', {})
         params.update(kwargs)
-        return self
+        return cloned
+
+    def all(self):
+        return self._clone()
