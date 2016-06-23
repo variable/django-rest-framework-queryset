@@ -64,7 +64,6 @@ class RestFrameworkQuerySet(BaseAPIQuerySet):
             params = self.kwargs.get('params', {})
             params['offset'] = 0
             params['limit'] = 0
-            self.kwargs['params'] = params
             resp = self.call_api()
             result = resp.json()
             return result['count']
