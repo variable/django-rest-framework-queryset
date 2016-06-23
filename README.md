@@ -1,5 +1,5 @@
 # Django Rest Framework QuerySet
-Mimicking the Django ORM queryset so that can be used ListViews for pagination
+Mimicking the Django ORM queryset over rest framework api
 
 ## Usage:
 ```python
