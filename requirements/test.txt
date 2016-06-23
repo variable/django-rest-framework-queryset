@@ -2,3 +2,4 @@
 Django>=1.7
 djangorestframework==3.3.3
 django-filter==0.13.0
+mock==2.0.0

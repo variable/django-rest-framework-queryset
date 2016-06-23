@@ -17,6 +17,9 @@ class BaseAPIQuerySet(object):
         """
         return self.request_method(self.url, *self.args, **self.kwargs)
 
+    def __iter__(self):
+        return iter(self.__call__())
+
     def __call__(self):
         resp = self.call_api()
         return self.get_result(resp)
@@ -26,7 +29,7 @@ class BaseAPIQuerySet(object):
 
     def __getitem__(self, index):
         if isinstance(index, int):
-            return super(APIQuerySet, self).__getitem__(index)
+            return self.__call__()[index]
         elif isinstance(index, slice):
             return self.page_result(index)
 
@@ -71,12 +74,10 @@ class RestFrameworkQuerySet(BaseAPIQuerySet):
         return result['results']
 
     def page_result(self, slicer):
-        with self:
-            params = self.kwargs.get('params', {})
-            params['offset'] = slicer.start
-            params['limit'] = slicer.stop - slicer.start
-            self.kwargs['params'] = params
-            return self.__call__()
+        params = self.kwargs.setdefault('params', {})
+        params['offset'] = slicer.start
+        params['limit'] = slicer.stop - slicer.start
+        return self
 
     def filter(self, **kwargs):
         params = self.kwargs.setdefault('params', {})
