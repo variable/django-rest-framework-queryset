@@ -2,6 +2,29 @@
 Mimicking the Django ORM queryset over rest framework api
 
 ## Usage:
+
+### normal operation
+```python
+    from rest_framework_queryset import RestFrameworkQuerySet
+    from django.core.paginator import Paginator
+
+    qs = RestFrameworkQuerySet('http://localhost:8082/api/')
+    qs.all()
+
+    # filter
+    boys = qs.filter(gender='boy')
+    girls = qs.filter(gender='girls')
+
+    # slicing
+    first_100_boys = boys[:100]
+
+    # pagination
+    p = Paginator(qs, 10)
+    print p.count
+    print p.num_pages
+    page1 = p.page(1)
+
+### class based view
 ```python
 from django.views.generic import ListView
 from rest_framework_queryset import RestFrameworkQuerySet

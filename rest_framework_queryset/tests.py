@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from __future__ import absolute_import
-from django.test import TestCase
+from django.test import TestCase, LiveServerTestCase
+from django.core.paginator import Paginator
+from api.models import DataModel
 from queryset import RestFrameworkQuerySet
 from mock import patch, MagicMock
 
@@ -48,3 +50,16 @@ class RestFrameworkQuerySetTestCase(TestCase):
         with patch('queryset.requests.get', return_value=fake_response) as mock_get:
             qs = RestFrameworkQuerySet('/api/').all()
             self.assertEqual(list(qs), range(10))
+
+
+class PaginationTestCase(LiveServerTestCase):
+    def test_pagination(self):
+        for i in range(100):
+            DataModel.objects.create(value=i)
+        qs = RestFrameworkQuerySet('http://localhost:8082/api/')
+        p = Paginator(qs, 10)
+        self.assertEqual(p.count, 100)
+        self.assertEqual(p.num_pages, 10)
+        page2 = p.page(2)
+        item_list = [item['value'] for item in page2.object_list]
+        self.assertEqual(item_list, range(10, 20))
