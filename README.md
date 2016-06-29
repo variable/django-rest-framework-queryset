@@ -23,6 +23,7 @@ Mimicking the Django ORM queryset over rest framework api
     print p.count
     print p.num_pages
     page1 = p.page(1)
+```
 
 ### class based view
 ```python
