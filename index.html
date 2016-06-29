@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Django-rest-framework-queryset by variable</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Django-rest-framework-queryset</h1>
+      <h2 class="project-tagline">Mimicking the Django ORM queryset so that can be used ListViews for pagination</h2>
+      <a href="https://github.com/variable/django-rest-framework-queryset" class="btn">View on GitHub</a>
+      <a href="https://github.com/variable/django-rest-framework-queryset/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/variable/django-rest-framework-queryset/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="django-rest-framework-queryset" class="anchor" href="#django-rest-framework-queryset" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Django Rest Framework QuerySet</h1>
+
+<p>Mimicking the Django ORM queryset over rest framework api</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage:</h2>
+
+<h3>
+<a id="normal-operation" class="anchor" href="#normal-operation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>normal operation</h3>
+
+<div class="highlight highlight-source-python"><pre>    <span class="pl-k">from</span> rest_framework_queryset <span class="pl-k">import</span> RestFrameworkQuerySet
+    <span class="pl-k">from</span> django.core.paginator <span class="pl-k">import</span> Paginator
+
+    qs <span class="pl-k">=</span> RestFrameworkQuerySet(<span class="pl-s"><span class="pl-pds">'</span>http://localhost:8082/api/<span class="pl-pds">'</span></span>)
+    qs.all()
+
+    <span class="pl-c"># filter</span>
+    boys <span class="pl-k">=</span> qs.filter(<span class="pl-v">gender</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>boy<span class="pl-pds">'</span></span>)
+    girls <span class="pl-k">=</span> qs.filter(<span class="pl-v">gender</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>girls<span class="pl-pds">'</span></span>)
+
+    <span class="pl-c"># slicing</span>
+    first_100_boys <span class="pl-k">=</span> boys[:<span class="pl-c1">100</span>]
+
+    <span class="pl-c"># pagination</span>
+    p <span class="pl-k">=</span> Paginator(qs, <span class="pl-c1">10</span>)
+    <span class="pl-c1">print</span> p.count
+    <span class="pl-c1">print</span> p.num_pages
+    page1 <span class="pl-k">=</span> p.page(<span class="pl-c1">1</span>)</pre></div>
+
+<h3>
+<a id="class-based-view" class="anchor" href="#class-based-view" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>class based view</h3>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> django.views.generic <span class="pl-k">import</span> ListView
+<span class="pl-k">from</span> rest_framework_queryset <span class="pl-k">import</span> RestFrameworkQuerySet
+
+<span class="pl-k">class</span> <span class="pl-en">ListDataView</span>(<span class="pl-e">ListView</span>):
+    paginate_by <span class="pl-k">=</span> <span class="pl-c1">10</span>
+    template_name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>list.html<span class="pl-pds">'</span></span>
+
+    <span class="pl-k">def</span> <span class="pl-en">get_queryset</span>(<span class="pl-smi"><span class="pl-smi">self</span></span>, <span class="pl-k">*</span><span class="pl-smi">args</span>, <span class="pl-k">**</span><span class="pl-smi">kwargs</span>):
+        <span class="pl-k">return</span> RestFrameworkQuerySet(<span class="pl-s"><span class="pl-pds">'</span>http://localhost:8082/api/<span class="pl-pds">'</span></span>).filter(<span class="pl-k">**</span><span class="pl-v">self</span>.request.<span class="pl-c1">GET</span>.dict())</pre></div>
+
+<h2>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Dependencies</h2>
+
+<p>The queryset is dependent on the API that uses <a href="http://www.django-rest-framework.org/api-guide/pagination/#limitoffsetpagination">LimiteOffsetPagination</a>
+If you are using <a href="http://www.django-rest-framework.org/api-guide/pagination/#pagenumberpagination">PageNumberPagination</a> then you can use the included <code>rest_framework_queryset.pagination.HybridPagination</code> which will switch pagination class depends on the query param is passed.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/variable/django-rest-framework-queryset">Django-rest-framework-queryset</a> is maintained by <a href="https://github.com/variable">variable</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
