@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/variable/django-rest-framework-queryset.svg?branch=master)](https://travis-ci.org/variable/django-rest-framework-queryset.svg?branch=master)
 # Django Rest Framework QuerySet
 Mimicking the Django ORM queryset over rest framework api
 

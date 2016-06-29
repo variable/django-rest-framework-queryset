@@ -2,13 +2,11 @@ language: python
 python:
   - "2.7"
 env:
-  - DJANGO_VERSION=1.7
-  - DJANGO_VERSION=1.8
   - DJANGO_VERSION=1.9
 # command to install dependencies
 install:
-    - pip install -r requirements/test.txt
-    - pip install -I Django==$DJANGO_VERSION
+  - pip install -r requirements/test.txt
+  - pip install -I Django==$DJANGO_VERSION
 # command to run tests
 script:
-    - cd $TRAVIS_BUILD_DIR/rest_framework_queryset && ./manage.py test
+  - cd $TRAVIS_BUILD_DIR/rest_framework_queryset && ./manage.py test
