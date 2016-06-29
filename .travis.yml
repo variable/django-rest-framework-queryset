@@ -16,5 +16,4 @@ install:
     - pip install -I Django==$DJANGO_VERSION
 # command to run tests
 script:
-    - cd $TRAVIS_BUILD_DIR/rest_framework_queryset
-    - ./manage.py test
+    - cd $TRAVIS_BUILD_DIR/rest_framework_queryset && ./manage.py test
