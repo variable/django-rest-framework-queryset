@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 from django.test import TestCase, LiveServerTestCase
 from django.core.paginator import Paginator
+from django.core.exceptions import MultipleObjectsReturned
 from api.models import DataModel
 from queryset import RestFrameworkQuerySet
 from mock import patch, MagicMock
@@ -38,6 +39,15 @@ class RestFrameworkQuerySetTestCase(TestCase):
             qs2 = qs1.filter(b=234)
             list(qs2)  # execute
             mock_get.assert_any_call('/api/', params={'a': 123, 'b':234})
+
+    def test_get_call(self):
+        fake_response = MagicMock(json=lambda:{'count': 10, 'results': range(10)})
+        with patch('queryset.requests.get', return_value=fake_response) as mock_get:
+            qs = RestFrameworkQuerySet('/api/')
+            with self.assertRaises(MultipleObjectsReturned):
+                qs1 = qs.get(a=123)
+            self.assertEqual(list(qs), range(10))
+            mock_get.assert_any_call('/api/', params={'a': 123})
 
     def test_count_call(self):
         fake_response = MagicMock(json=lambda:{'count': 10, 'results': range(10)})

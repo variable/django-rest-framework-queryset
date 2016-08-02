@@ -22,6 +22,6 @@ from web.views import ListDataView
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', ListView.as_view()),
-    url(r'^$', ListDataView.as_view()),
-    url(r'^page/(?P<page>\d+)/$', ListDataView.as_view()),
+    url(r'^list/$', ListDataView.as_view()),
+    url(r'^list/page/(?P<page>\d+)/$', ListDataView.as_view()),
 ]
