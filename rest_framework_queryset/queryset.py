@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from django.core.exceptions import MultipleObjectsReturned
 import requests
 import copy
 
@@ -80,6 +81,13 @@ class RestFrameworkQuerySet(BaseAPIQuerySet):
         params = cloned.kwargs.setdefault('params', {})
         params.update(kwargs)
         return cloned
+
+    def get(self, **kwargs):
+        cloned = self.filter(**kwargs)
+        result = cloned.get_result()
+        if len(result) > 1:
+            raise MultipleObjectsReturned('get() returned more than one result, it returned {}'.format(cloned.count()))
+        return result[0]
 
     def all(self):
         return self._clone()
