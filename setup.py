@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 import codecs
 import os
 import re
@@ -44,15 +42,42 @@ def extra_requirements():
     except OSError:
         return None
 
+
+def get_packages(package):
+    """
+    Return root package and all sub-packages.
+    """
+    return [dirpath
+            for dirpath, dirnames, filenames in os.walk(package)
+            if os.path.exists(os.path.join(dirpath, '__init__.py'))]
+
+
+def get_package_data(package):
+    """
+    Return all files under the root package, that are not in a
+    package themselves.
+    """
+    walk = [(dirpath.replace(package + os.sep, '', 1), filenames)
+            for dirpath, dirnames, filenames in os.walk(package)
+            if not os.path.exists(os.path.join(dirpath, '__init__.py'))]
+
+    filepaths = []
+    for base, filenames in walk:
+        filepaths.extend([os.path.join(base, filename)
+                          for filename in filenames])
+    return {package: filepaths}
+
+
 setup(
     name='django-rest-framework-queryset',
-    version=find_version('__init__.py'),
+    version=find_version('rest_framework_queryset/__init__.py'),
     author='James Lin',
     author_email='james@lin.net.nz',
-    long_description=read('README.md'),
+    long_description='',
     install_requires=requirements(),
     packages=find_packages(exclude=["tests"]),
-    include_package_data=True,
+    # packages=get_packages('rest_framework_queryset'),
+    # package_data=get_package_data('rest_framework_queryset'),
     license='MIT',
     description="Mimicking the Django ORM queryset over rest framework api",
     classifiers=[
