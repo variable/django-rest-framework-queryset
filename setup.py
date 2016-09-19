@@ -75,7 +75,7 @@ setup(
     author_email='james@lin.net.nz',
     long_description='',
     install_requires=requirements(),
-    packages=find_packages(exclude=["tests"]),
+    packages=find_packages(exclude=["tests", "api", "api.*", "web", "web.*", "django_rest_framework_queryset"]),
     # packages=get_packages('rest_framework_queryset'),
     # package_data=get_package_data('rest_framework_queryset'),
     license='MIT',
