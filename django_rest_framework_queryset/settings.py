@@ -54,7 +54,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'rest_framework_queryset.urls'
+ROOT_URLCONF = 'django_rest_framework_queryset.urls'
 
 TEMPLATES = [
     {
@@ -126,6 +126,6 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend', 'rest_framework.filters.OrderingFilter'),
-    'DEFAULT_PAGINATION_CLASS': 'pagination.HybridPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework_queryset.pagination.HybridPagination',
     'PAGE_SIZE': 30
 }

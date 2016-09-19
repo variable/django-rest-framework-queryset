@@ -5,7 +5,7 @@ from django.test import TestCase, LiveServerTestCase
 from django.core.paginator import Paginator
 from django.core.exceptions import MultipleObjectsReturned
 from api.models import DataModel
-from queryset import RestFrameworkQuerySet
+from rest_framework_queryset import RestFrameworkQuerySet
 from mock import patch, MagicMock
 
 
@@ -31,7 +31,7 @@ class RestFrameworkQuerySetTestCase(TestCase):
 
     def test_filter_call(self):
         fake_response = MagicMock(json=lambda:{'count': 10, 'results': range(10)})
-        with patch('queryset.requests.get', return_value=fake_response) as mock_get:
+        with patch('rest_framework_queryset.queryset.requests.get', return_value=fake_response) as mock_get:
             qs = RestFrameworkQuerySet('/api/')
             qs1 = qs.filter(a=123)
             self.assertEqual(list(qs1), range(10))
@@ -42,7 +42,7 @@ class RestFrameworkQuerySetTestCase(TestCase):
 
     def test_get_call(self):
         fake_response = MagicMock(json=lambda:{'count': 10, 'results': range(10)})
-        with patch('queryset.requests.get', return_value=fake_response) as mock_get:
+        with patch('rest_framework_queryset.queryset.requests.get', return_value=fake_response) as mock_get:
             qs = RestFrameworkQuerySet('/api/')
             with self.assertRaises(MultipleObjectsReturned):
                 qs1 = qs.get(a=123)
@@ -51,13 +51,13 @@ class RestFrameworkQuerySetTestCase(TestCase):
 
     def test_count_call(self):
         fake_response = MagicMock(json=lambda:{'count': 10, 'results': range(10)})
-        with patch('queryset.requests.get', return_value=fake_response) as mock_get:
+        with patch('rest_framework_queryset.queryset.requests.get', return_value=fake_response) as mock_get:
             count = RestFrameworkQuerySet('/api/').count()
             self.assertEqual(count, 10)
 
     def test_all(self):
         fake_response = MagicMock(json=lambda:{'count': 10, 'results': range(10)})
-        with patch('queryset.requests.get', return_value=fake_response) as mock_get:
+        with patch('rest_framework_queryset.queryset.requests.get', return_value=fake_response) as mock_get:
             qs = RestFrameworkQuerySet('/api/').all()
             self.assertEqual(list(qs), range(10))
 

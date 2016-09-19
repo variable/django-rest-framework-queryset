@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView
-from queryset import RestFrameworkQuerySet
+from rest_framework_queryset import RestFrameworkQuerySet
 
 
 class ListDataView(ListView):
