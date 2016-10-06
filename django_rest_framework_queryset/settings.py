@@ -72,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'rest_framework_queryset.wsgi.application'
+WSGI_APPLICATION = 'django_rest_framework_queryset.wsgi.application'
 
 
 # Database
