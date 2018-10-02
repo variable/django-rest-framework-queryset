@@ -90,12 +90,10 @@ setup(
     description="Mimicking the Django ORM queryset over rest framework api",
     classifiers=[
         "License :: OSI Approved :: MIT License",
-        "Development Status :: 3 - Alpha",
-        "Environment :: Web Environment",
         "Intended Audience :: Developers",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
         "Framework :: Django",
     ],
     extras_require=extra_requirements(),
