@@ -7,6 +7,7 @@ from .filters import DataModelFilter
 class DataModelSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = DataModel
+        fields = '__all__'
 
 
 class ListView(generics.ListAPIView):

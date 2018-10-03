@@ -34,7 +34,7 @@ class RestFrameworkQuerySetTestCase(TestCase):
         with patch('rest_framework_queryset.queryset.requests.get', return_value=fake_response) as mock_get:
             qs = RestFrameworkQuerySet('/api/')
             qs1 = qs.filter(a=123)
-            self.assertEqual(list(qs1), range(10))
+            self.assertEqual(list(qs1), list(range(10)))
             mock_get.assert_any_call('/api/', params={'a': 123})
             qs2 = qs1.filter(b=234)
             list(qs2)  # execute
@@ -46,7 +46,7 @@ class RestFrameworkQuerySetTestCase(TestCase):
             qs = RestFrameworkQuerySet('/api/')
             with self.assertRaises(MultipleObjectsReturned):
                 qs1 = qs.get(a=123)
-            self.assertEqual(list(qs), range(10))
+            self.assertEqual(list(qs), list(range(10)))
             mock_get.assert_any_call('/api/', params={'a': 123})
 
     def test_count_call(self):
@@ -59,17 +59,17 @@ class RestFrameworkQuerySetTestCase(TestCase):
         fake_response = MagicMock(json=lambda:{'count': 10, 'results': range(10)})
         with patch('rest_framework_queryset.queryset.requests.get', return_value=fake_response) as mock_get:
             qs = RestFrameworkQuerySet('/api/').all()
-            self.assertEqual(list(qs), range(10))
+            self.assertEqual(list(qs), list(range(10)))
 
 
 class PaginationTestCase(LiveServerTestCase):
     def test_pagination(self):
         for i in range(100):
             DataModel.objects.create(value=i)
-        qs = RestFrameworkQuerySet('http://localhost:8082/api/')
+        qs = RestFrameworkQuerySet('{}/api/'.format(self.live_server_url))
         p = Paginator(qs, 10)
         self.assertEqual(p.count, 100)
         self.assertEqual(p.num_pages, 10)
         page2 = p.page(2)
         item_list = [item['value'] for item in page2.object_list]
-        self.assertEqual(item_list, range(10, 20))
+        self.assertEqual(item_list, list(range(10, 20)))

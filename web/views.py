@@ -8,4 +8,4 @@ class ListDataView(ListView):
     template_name = 'list.html'
 
     def get_queryset(self, *args, **kwargs):
-        return RestFrameworkQuerySet('http://localhost:8082/api/').filter(**self.request.GET.dict())
+        return RestFrameworkQuerySet('{}/api/'.format(self.request.META['SERVER_URL'])).filter(**self.request.GET.dict())
