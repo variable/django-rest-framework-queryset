@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.core.exceptions import MultipleObjectsReturned
+from django.core.paginator import Paginator
 import requests
 import copy
 
@@ -55,6 +56,12 @@ class BaseAPIQuerySet(object):
 
 
 class RestFrameworkQuerySet(BaseAPIQuerySet):
+    def __iter__(self):
+        paginator = Paginator(self, 100)
+        for page in paginator.page_range:
+            for item in paginator.page(page).object_list:
+                yield item
+
     def count(self):
         cloned = self._clone()
         params = cloned.kwargs.get('params', {})

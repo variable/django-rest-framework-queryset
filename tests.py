@@ -35,10 +35,10 @@ class RestFrameworkQuerySetTestCase(TestCase):
             qs = RestFrameworkQuerySet('/api/')
             qs1 = qs.filter(a=123)
             self.assertEqual(list(qs1), list(range(10)))
-            mock_get.assert_any_call('/api/', params={'a': 123})
+            mock_get.assert_any_call('/api/', params={'a': 123, 'offset': 0, 'limit': 10})
             qs2 = qs1.filter(b=234)
             list(qs2)  # execute
-            mock_get.assert_any_call('/api/', params={'a': 123, 'b':234})
+            mock_get.assert_any_call('/api/', params={'a': 123, 'b': 234, 'offset': 0, 'limit': 10})
 
     def test_get_call(self):
         fake_response = MagicMock(json=lambda:{'count': 10, 'results': range(10)})
@@ -62,7 +62,7 @@ class RestFrameworkQuerySetTestCase(TestCase):
             self.assertEqual(list(qs), list(range(10)))
 
 
-class PaginationTestCase(LiveServerTestCase):
+class APILiveServerTestCase(LiveServerTestCase):
     def test_pagination(self):
         for i in range(100):
             DataModel.objects.create(value=i)
@@ -73,3 +73,22 @@ class PaginationTestCase(LiveServerTestCase):
         page2 = p.page(2)
         item_list = [item['value'] for item in page2.object_list]
         self.assertEqual(item_list, list(range(10, 20)))
+
+    def test_list_all(self):
+        DataModel.objects.bulk_create([DataModel(value=i) for i in range(1000)])
+        qs = RestFrameworkQuerySet('{}/api/'.format(self.live_server_url))
+        item_list = [item['value'] for item in list(qs)]
+        self.assertEqual(item_list, list(range(1000)))
+
+    def test_list_filter(self):
+        DataModel.objects.bulk_create([DataModel(value=i) for i in range(1000)])
+        qs = RestFrameworkQuerySet('{}/api/'.format(self.live_server_url))
+        qs = qs.filter(value__gt=300)
+        item_list = [item['value'] for item in list(qs)]
+        self.assertEqual(item_list, list(range(301, 1000)))
+
+    def test_slice(self):
+        DataModel.objects.bulk_create([DataModel(value=i) for i in range(1000)])
+        qs = RestFrameworkQuerySet('{}/api/'.format(self.live_server_url))
+        item_list = [item['value'] for item in qs[200:1000]]
+        self.assertEqual(item_list, list(range(200, 1000)))

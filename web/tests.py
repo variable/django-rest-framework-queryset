@@ -9,7 +9,6 @@ class ListTestCase(LiveServerTestCase):
             DataModel.objects.create(value=i)
 
     def test_list(self):
-
         resp = self.client.get('/list/', SERVER_URL=self.live_server_url)
         self.assertEqual([v['value'] for v in resp.context['object_list']], [i for i in range(10)])
         resp = self.client.get('/list/page/2/', SERVER_URL=self.live_server_url)
