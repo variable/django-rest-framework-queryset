@@ -18,6 +18,10 @@ Mimicking the Django ORM queryset over rest framework api
 
     # slicing
     first_100_boys = boys[:100]
+    
+    # iterate all records
+    for i in qs:
+        print(i)
 
     # pagination
     p = Paginator(qs, 10)
