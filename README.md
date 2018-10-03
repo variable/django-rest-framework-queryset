@@ -44,4 +44,3 @@ class ListDataView(ListView):
 
 ## Dependencies
 The queryset is dependent on the API that uses [LimiteOffsetPagination](http://www.django-rest-framework.org/api-guide/pagination/#limitoffsetpagination)
-If you are using [PageNumberPagination](http://www.django-rest-framework.org/api-guide/pagination/#pagenumberpagination) then you can use the included `rest_framework_queryset.pagination.HybridPagination` which will switch pagination class depends on the query param is passed.
