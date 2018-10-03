@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/variable/django-rest-framework-queryset.svg?branch=master)](https://travis-ci.org/variable/django-rest-framework-queryset)
 # Django Rest Framework QuerySet
-Mimicking the Django ORM queryset over rest framework api
+Mimicking the Django ORM queryset over rest framework api, which does lazy loading.
 
 ## Usage:
 
@@ -10,7 +10,6 @@ Mimicking the Django ORM queryset over rest framework api
     from django.core.paginator import Paginator
 
     qs = RestFrameworkQuerySet('http://localhost:8082/api/')
-    qs.all()
 
     # filter
     boys = qs.filter(gender='boy')
