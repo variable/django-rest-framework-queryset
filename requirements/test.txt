@@ -1,5 +1,5 @@
 -r base.txt
-Django>=1.7
-djangorestframework==3.3.3
-django-filter==0.13.0
+Django~=2.1
+djangorestframework~=3.8.0
+django-filter~=2.0.0
 mock==2.0.0
