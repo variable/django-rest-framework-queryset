@@ -56,8 +56,10 @@ class BaseAPIQuerySet(object):
 
 
 class RestFrameworkQuerySet(BaseAPIQuerySet):
+    page_size = 100
+
     def __iter__(self):
-        paginator = Paginator(self, 100)
+        paginator = Paginator(self, self.page_size)
         for page in paginator.page_range:
             for item in paginator.page(page).object_list:
                 yield item
