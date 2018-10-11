@@ -64,6 +64,11 @@ class RestFrameworkQuerySet(BaseAPIQuerySet):
             for item in paginator.page(page).object_list:
                 yield item
 
+    def _clone(self):
+        cloned = super(RestFrameworkQuerySet, self)._clone()
+        cloned.page_size = self.page_size
+        return cloned
+
     def count(self):
         cloned = self._clone()
         params = cloned.kwargs.get('params', {})
