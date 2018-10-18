@@ -8,7 +8,8 @@ import copy
 
 class BaseAPIQuerySet(object):
     def __init__(self, url, *args, **kwargs):
-        self.request_method = requests.get
+        _req_session = requests.Session()
+        self.request_method = _req_session.get
         self.url = url
         self.args = args
         self.kwargs = kwargs
