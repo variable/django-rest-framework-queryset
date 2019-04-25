@@ -13,7 +13,13 @@ Mimicking the Django ORM queryset over rest framework api, which does lazy loadi
 
     # filter
     boys = qs.filter(gender='boy')
-    girls = qs.filter(gender='girls')
+    girls = qs.filter(gender='girl')
+    
+    # get by id
+    boy = qs.get(101)
+    
+    # filter enforce 1 result
+    boy = qs.get(name='james', gender='boy')
 
     # slicing
     first_100_boys = boys[:100]
