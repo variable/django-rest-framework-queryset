@@ -14,7 +14,7 @@ class BaseAPIQuerySet(object):
         self.args = args
         self.kwargs = kwargs
 
-    def call_api(self):
+    def _call_api(self):
         """
         perform api call
         """
@@ -59,6 +59,10 @@ class BaseAPIQuerySet(object):
 class RestFrameworkQuerySet(BaseAPIQuerySet):
     page_size = 100
 
+    def __init__(self, *args, **kwargs):
+        super(RestFrameworkQuerySet, self).__init__(*args, **kwargs)
+        self.__id = None
+
     def __iter__(self):
         paginator = Paginator(self, self.page_size)
         for page in paginator.page_range:
@@ -70,19 +74,26 @@ class RestFrameworkQuerySet(BaseAPIQuerySet):
         cloned.page_size = self.page_size
         return cloned
 
+    def _call_api(self):
+        if self.__id:
+            self.url = '{}/{}'.format(self.url.rstrip('/'), self.__id)
+        return super(RestFrameworkQuerySet, self)._call_api()
+
     def count(self):
         cloned = self._clone()
         params = cloned.kwargs.get('params', {})
         params['offset'] = 0
         params['limit'] = 0
-        resp = cloned.call_api()
+        resp = cloned._call_api()
         result = resp.json()
         return result['count']
 
     def get_result(self):
-        response = self.call_api()
+        response = self._call_api()
         result = response.json()
-        return result['results']
+        if 'results' in result:
+            return result['results']
+        return result
 
     def page_result(self, slicer):
         cloned = self._clone()
@@ -97,12 +108,15 @@ class RestFrameworkQuerySet(BaseAPIQuerySet):
         params.update(kwargs)
         return cloned
 
-    def get(self, **kwargs):
+    def get(self, __id=None, **kwargs):
         cloned = self.filter(**kwargs)
+        cloned.__id = __id
         result = cloned.get_result()
-        if len(result) > 1:
-            raise MultipleObjectsReturned('get() returned more than one result, it returned {}'.format(cloned.count()))
-        return result[0]
+        if isinstance(result, list):
+            if len(result) > 1:
+                raise MultipleObjectsReturned('get() returned more than one result, it returned {}'.format(cloned.count()))
+            return result[0]
+        return result
 
     def all(self):
         return self._clone()

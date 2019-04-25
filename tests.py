@@ -41,13 +41,21 @@ class RestFrameworkQuerySetTestCase(TestCase):
             mock_get.assert_any_call('/api/', params={'a': 123, 'b': 234, 'offset': 0, 'limit': 10})
 
     def test_get_call(self):
-        fake_response = MagicMock(json=lambda:{'count': 10, 'results': range(10)})
+        fake_response = MagicMock(json=lambda:{'count': 10, 'results': list(range(10))})
         with patch('rest_framework_queryset.queryset.requests.Session.get', return_value=fake_response) as mock_get:
             qs = RestFrameworkQuerySet('/api/')
             with self.assertRaises(MultipleObjectsReturned):
                 qs1 = qs.get(a=123)
             self.assertEqual(list(qs), list(range(10)))
             mock_get.assert_any_call('/api/', params={'a': 123})
+
+    def test_get_call_by_id(self):
+        fake_response = MagicMock(json=lambda:{'a': 123})
+        with patch('rest_framework_queryset.queryset.requests.Session.get', return_value=fake_response) as mock_get:
+            qs = RestFrameworkQuerySet('/api/')
+            qs1 = qs.get(123)
+            self.assertEqual(qs1, {'a': 123})
+            mock_get.assert_any_call('/api/123', params={})
 
     def test_count_call(self):
         fake_response = MagicMock(json=lambda:{'count': 10, 'results': range(10)})
