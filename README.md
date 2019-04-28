@@ -50,3 +50,7 @@ class ListDataView(ListView):
 
 ## Dependencies
 The queryset is dependent on the API that uses [LimiteOffsetPagination](http://www.django-rest-framework.org/api-guide/pagination/#limitoffsetpagination)
+
+## Compatibility 
+- Python 2
+- Python 3
