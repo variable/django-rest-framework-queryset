@@ -9,7 +9,7 @@ class HybridPagination(PageNumberPagination):
     By default it uses the PageNumberPagination
     When 'offset' is used in request.GET, it will switch to use LimitOffsetPagination
     """
-    page_size = 2
+    page_size = 10
     default_limit = 1
 
     def __init__(self, *args, **kwargs):

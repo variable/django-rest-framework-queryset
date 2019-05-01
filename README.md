@@ -49,7 +49,11 @@ class ListDataView(ListView):
 ```
 
 ## Dependencies
-The queryset is dependent on the API that uses [LimiteOffsetPagination](http://www.django-rest-framework.org/api-guide/pagination/#limitoffsetpagination)
+The queryset is dependent on the API that uses [LimitOffsetPagination](http://www.django-rest-framework.org/api-guide/pagination/#limitoffsetpagination)
+
+In this project, it provides a HybridPagination class, which will swap to `LimitOffsetPagination` when it sees `limit` or `offset` query params,
+so that if you are currently using `PageNumberPagination` then you can swap it 
+with `rest_framework_queryset.pagination.HybridPagination` to achieve both purposes. This feature is experimental, so please report any problems.
 
 ## Compatibility 
 - Python 2
