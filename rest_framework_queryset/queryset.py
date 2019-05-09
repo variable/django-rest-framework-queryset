@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.core.exceptions import MultipleObjectsReturned
 from django.core.paginator import Paginator
+from .entity import get_entity
 import requests
 import copy
 
@@ -90,11 +91,10 @@ class RestFrameworkQuerySet(BaseAPIQuerySet):
 
     def get_result(self):
         response = self._call_api()
-        print(response.text)
         result = response.json()
         if 'results' in result:
-            return result['results']
-        return result
+            return list(map(lambda x: get_entity(x), result['results']))
+        return get_entity(result)
 
     def page_result(self, slicer):
         cloned = self._clone()

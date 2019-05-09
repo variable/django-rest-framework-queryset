@@ -5,3 +5,4 @@ from __future__ import absolute_import
 __version__ = '0.3.2'
 
 from .queryset import RestFrameworkQuerySet
+from .entity import get_entity
