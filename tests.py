@@ -55,7 +55,7 @@ class RestFrameworkQuerySetTestCase(TestCase):
             qs = RestFrameworkQuerySet('/api/')
             qs1 = qs.get(123)
             self.assertEqual(qs1, {'a': 123})
-            mock_get.assert_any_call('/api/123', params={})
+            mock_get.assert_any_call('/api/123/', params={})
 
     def test_count_call(self):
         fake_response = MagicMock(json=lambda:{'count': 10, 'results': range(10)})
