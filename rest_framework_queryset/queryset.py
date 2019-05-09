@@ -76,7 +76,7 @@ class RestFrameworkQuerySet(BaseAPIQuerySet):
 
     def _call_api(self):
         if self.__id:
-            self.url = '{}/{}'.format(self.url.rstrip('/'), self.__id)
+            self.url = '{}/{}/'.format(self.url.rstrip('/'), self.__id)
         return super(RestFrameworkQuerySet, self)._call_api()
 
     def count(self):
@@ -90,6 +90,7 @@ class RestFrameworkQuerySet(BaseAPIQuerySet):
 
     def get_result(self):
         response = self._call_api()
+        print(response.text)
         result = response.json()
         if 'results' in result:
             return result['results']

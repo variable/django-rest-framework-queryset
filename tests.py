@@ -100,3 +100,11 @@ class APILiveServerTestCase(LiveServerTestCase):
         qs = RestFrameworkQuerySet('{}/api/'.format(self.live_server_url))
         item_list = [item['value'] for item in qs[200:1000]]
         self.assertEqual(item_list, list(range(200, 1000)))
+
+    def test_get(self):
+        DataModel.objects.bulk_create([DataModel(value=i) for i in range(100)])
+        qs = RestFrameworkQuerySet('{}/api/'.format(self.live_server_url))
+        item = qs.get(1)
+        self.assertEqual(item['id'], 1)
+        item = qs.get(2)
+        self.assertEqual(item['id'], 2)

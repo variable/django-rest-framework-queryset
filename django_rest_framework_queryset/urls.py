@@ -16,12 +16,16 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from rest_framework import routers
 from api.views import ListView
 from web.views import ListDataView
 
+router = routers.SimpleRouter()
+router.register(r'api', ListView)
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', ListView.as_view()),
+    # url(r'^api/', ListView.as_view()),
     url(r'^list/$', ListDataView.as_view()),
     url(r'^list/page/(?P<page>\d+)/$', ListDataView.as_view()),
-]
+] + router.urls

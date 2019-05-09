@@ -1,5 +1,6 @@
 from rest_framework import generics
 from rest_framework import serializers
+from rest_framework import viewsets
 from .models import DataModel
 from .filters import DataModelFilter
 
@@ -10,7 +11,7 @@ class DataModelSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ListView(generics.ListAPIView):
+class ListView(viewsets.ModelViewSet):
     serializer_class = DataModelSerializer
     queryset = DataModel.objects.all()
     filter_class = DataModelFilter

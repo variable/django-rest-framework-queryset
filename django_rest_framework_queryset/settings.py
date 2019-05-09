@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'web',
+    'django_filters',
 ]
 
 MIDDLEWARE_CLASSES = [
