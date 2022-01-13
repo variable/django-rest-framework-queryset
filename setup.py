@@ -3,16 +3,6 @@ import codecs
 import os
 import re
 
-try:
-    from pip.download import PipSession
-except ImportError:
-    from pip._internal.download import PipSession
-
-try:
-    from pip.req import parse_requirements
-except ImportError:
-    from pip._internal.req import parse_requirements
-
 from setuptools import setup, find_packages
 
 
@@ -28,27 +18,6 @@ def find_version(*file_paths):
     if version_match:
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
-
-
-def requirements(file_name='requirements.txt'):
-    return [
-        str(ir.req)
-        for ir in parse_requirements(file_name, session=PipSession())
-        if ir.match_markers()
-    ]
-
-
-def extra_requirements():
-    try:
-        join = os.path.join
-        path = join('requirements', 'extra')
-        return {
-            str(file_name.rsplit('.', 1)[0]): requirements(join(path, file_name))
-            for file_name in os.listdir(path)
-            if file_name.endswith('.txt')
-        }
-    except OSError:
-        return None
 
 
 def get_packages(package):
@@ -82,7 +51,7 @@ setup(
     author='James Lin',
     author_email='james@lin.net.nz',
     long_description='',
-    install_requires=requirements(),
+    install_requires=['requests>=2.1'],
     packages=find_packages(exclude=["tests", "api", "api.*", "web", "web.*", "django_rest_framework_queryset"]),
     # packages=get_packages('rest_framework_queryset'),
     # package_data=get_package_data('rest_framework_queryset'),
@@ -96,5 +65,4 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Framework :: Django",
     ],
-    extras_require=extra_requirements(),
 )
